@@ -131,6 +131,73 @@ app.put('/projetos/:id', async (req, res) => {
     }
 });
 
+//////////////////////////Tarefas///////////////////////////////
+app.get('/tarefas', async (req, res) => {
+    try {
+        const tarefas = await prisma.tarefas.findMany();
+        res.status(200).json(tarefas);
+    } catch (error) { 
+        res.status(500).json({ mensagem: "Falha ao buscar as tarefas!" });
+    }
+});
+
+app.get('/tarefas/:id', async (req, res) => {
+    try {
+        const tarefa = await prisma.tarefas.findFirst({
+            where: { id: req.query.id }
+        });
+        if (tarefa) {
+            res.status(200).json(tarefa);
+        } else {
+            res.status(404).json({ mensagem: "Tarefa não encontrado!" });
+        }
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao buscar a Tarefa!" });
+    }
+});
+
+app.post('/tarefas', async (req, res) => {
+    try {
+        const { nome, descricao, responsavel, status, dataEntrega, projetoPertencente } = req.body;
+        await prisma.tarefas.create({
+            data: { nome, descricao, responsavel, status, dataEntrega, projetoPertencente },
+        });
+        res.status(201).json({
+            mensagem: "Tarefa cadastrada com sucesso!",
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao cadastrar a Tarefa!" });
+    }
+});
+
+app.delete('/tarefas/:id', async (req, res) => {
+    try {
+        const tarefa = await prisma.tarefas.delete({
+            where: { id: parseInt(req.params.id) }
+        });
+        res.status(200).json({
+            mensagem: "Tarefa deletada com sucesso!",
+            tarefa: tarefa
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao deletar a Tarefa." });
+    }
+});
+
+app.put('/projetos/:id', async (req, res) => {
+    try {
+        const projeto = await prisma.projeto.update({
+            where: { id: parseInt(req.params.id) },
+            data: req.body
+        });
+        res.status(200).json({
+            mensagem: "Projeto atualizado com sucesso!",
+            projeto: projeto
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao atualizar o Projeto." });
+    }
+});
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
