@@ -30,8 +30,8 @@ app.get('/usuarios/:email&:senha', async (req, res) => {
         const usuario = await prisma.usuario.findFirst({
             where: {
                 AND: [
-                    { email: req.query.email },
-                    { senha: req.query.senha }
+                    { email: req.params.email },
+                    { senha: req.params.senha }
                 ]
             }
         });
@@ -63,7 +63,73 @@ app.post('/usuarios', upload.single('foto'), async (req, res) => {
     }
 });
 
+//////////////////////////Projetos///////////////////////////////
+app.get('/projetos', async (req, res) => {
+    try {
+        const projetos = await prisma.projeto.findMany();
+        res.status(200).json(projetos);
+    } catch (error) { 
+        res.status(500).json({ mensagem: "Falha ao buscar os Projetos!" });
+    }
+});
 
+app.get('/projetos/:id', async (req, res) => {
+    try {
+        const projeto = await prisma.projeto.findFirst({
+            where: { id: req.query.id }
+        });
+        if (projeto) {
+            res.status(200).json(projeto);
+        } else {
+            res.status(404).json({ mensagem: "Projeto não encontrado!" });
+        }
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao buscar o Projeto!" });
+    }
+});
+
+app.post('/projetos', async (req, res) => {
+    try {
+        const { nome, descricao } = req.body;
+        await prisma.projeto.create({
+            data: { nome, descricao },
+        });
+        res.status(201).json({
+            mensagem: "Projeto cadastrado com sucesso!",
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao cadastrar o Projeto!" });
+    }
+});
+
+app.delete('/projetos/:id', async (req, res) => {
+    try {
+        const projeto = await prisma.projeto.delete({
+            where: { id: parseInt(req.params.id) }
+        });
+        res.status(200).json({
+            mensagem: "Projeto deletado com sucesso!",
+            projeto: projeto
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao deletar o Projeto." });
+    }
+});
+
+app.put('/projetos/:id', async (req, res) => {
+    try {
+        const projeto = await prisma.projeto.update({
+            where: { id: parseInt(req.params.id) },
+            data: req.body
+        });
+        res.status(200).json({
+            mensagem: "Projeto atualizado com sucesso!",
+            projeto: projeto
+        });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao atualizar o Projeto." });
+    }
+});
 
 
 app.listen(3000, () => {

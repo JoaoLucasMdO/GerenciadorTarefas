@@ -33,7 +33,7 @@ model usuario {
   id      Int       @id @default(autoincrement())
   foto    Bytes?
   nome    String    @db.VarChar(35)
-  email   String    @db.VarChar(35)
+  email   String    @unique(map: "email") @db.VarChar(35)
   senha   String    @db.VarChar(20)
   tarefas tarefas[]
 }
