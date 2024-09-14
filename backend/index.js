@@ -15,6 +15,15 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
+app.get('/usuarios/:id', async (req, res) => {
+    try{
+        const usuario = await prisma.usuario.findOne(req.query.id);
+        res.json(usuario)
+    }catch{
+        res.json({mensagem: "Falha ao buscar usuário!"})
+    }
+})
+
 app.post('/usuarios', async (req, res) => {
     try{
         const { nome, email, senha } = req.body;
