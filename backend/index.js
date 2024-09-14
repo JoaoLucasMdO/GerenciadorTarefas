@@ -17,7 +17,8 @@ app.get('/usuarios', async (req, res) => {
 
 app.get('/usuarios/:id', async (req, res) => {
     try{
-        const usuario = await prisma.usuario.findOne(req.query.id);
+        const usuario = await prisma.usuario.findUnique({
+            where: { id: parseInt(req.params.id) }});
         res.json(usuario)
     }catch{
         res.json({mensagem: "Falha ao buscar usuário!"})
