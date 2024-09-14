@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model projeto {
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(30)
+  descricao String    @db.VarChar(250)
+  tarefas   tarefas[]
+}
+
+model tarefas {
+  id                 Int      @id @default(autoincrement())
+  nome               String   @db.VarChar(30)
+  descricao          String   @db.VarChar(250)
+  responsavel        Int?
+  status             Boolean
+  dataEntrega        DateTime @db.Date
+  projetoPertencente Int?
+  usuario            usuario? @relation(fields: [responsavel], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tarefas_ibfk_1")
+  projeto            projeto? @relation(fields: [projetoPertencente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tarefas_ibfk_2")
+
+  @@index([projetoPertencente], map: "projetoPertencente")
+  @@index([responsavel], map: "responsavel")
+}
+
+model usuario {
+  id      Int       @id @default(autoincrement())
+  nome    String    @db.VarChar(35)
+  email   String    @db.VarChar(35)
+  senha   String    @db.VarChar(20)
+  tarefas tarefas[]
+}
