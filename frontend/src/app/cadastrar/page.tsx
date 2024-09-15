@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Button, Container, Typography, Link, Box } from '@mui/material';
 import { AccountCircle, Lock } from '@mui/icons-material';
 
-const Login = () => {
+const Register = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -14,7 +14,7 @@ const Login = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Login
+          Cadastro
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
@@ -53,10 +53,10 @@ const Login = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Entrar
+            Cadastrar
           </Button>
-          <Link href="/cadastrar" variant="body2">
-            {"Não tem uma conta? Cadastre-se"}
+          <Link href="/" variant="body2">
+            {"Já tem uma conta? Faça login"}
           </Link>
         </Box>
       </Box>
@@ -64,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
