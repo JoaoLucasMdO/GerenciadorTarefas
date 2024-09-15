@@ -4,8 +4,10 @@ const auth = require('./middleware/auth');
 const app = express();
 const prisma = new PrismaClient();
 const upload = require('./upload');
-const { criptografarSenha, compararSenha, gerarToken } = require('../utils/auth');
+const cors = require('cors');
+const { criptografarSenha, compararSenha, gerarToken } = require('./utils/auth');
 
+app.use(cors());
 app.use(express.json());
 //Códigos de status usados
 //200 Sucesso!
@@ -27,26 +29,43 @@ app.get('/usuarios', auth, async (req, res) => {
     }
 });
 
+app.get('/usuarios/:id', async (req, res) => {
+    try {
+        const usuario = await prisma.usuario.findFirst({
+            where: { id: req.query.id }
+        });
+        if (usuario) {
+            res.status(200).json(usuario);
+        } else {
+            res.status(404).json({ mensagem: "Usuario não encontrado!" });
+        }
+    } catch (error) {
+        res.status(500).json({ mensagem: "Falha ao buscar o Usuario!" });
+    }
+});
+
 app.post('/cadastro', upload.single('foto'), async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
         if (!req.file) {
             return res.status(400).json({ mensagem: "A Foto é obrigatória!" });
         }
-        const foto = req.file.buffer;
+        
         const senhaCriptografada = await criptografarSenha(senha);
+        
         await prisma.usuario.create({
-            data: { nome, email, senha: senhaCriptografada, foto },
+            data: { nome, email, senha: senhaCriptografada, foto: req.file.buffer },
         });
         res.status(201).json({
             mensagem: "Usuário cadastrado com sucesso!",
         });
     } catch (error) {
-        res.status(500).json({ mensagem: "Falha ao cadastrar o usuário!" });
+        res.status(500).json({ mensagem: "Falha ao cadastrar o usuário!"});
     }
 });
 
 app.post('/login', async (req, res) => {
+
     const { email, senha } = req.body;
   
     try {
@@ -57,7 +76,7 @@ app.post('/login', async (req, res) => {
       }
 
       const token = gerarToken(usuario.id);
-      res.status(200).json({ token, id: usuario.id });
+      res.status(200).json({ token, id: usuario.id, mensagem:"Logado com sucesso!" });
     } catch (error) {
       res.status(500).json({ mensagem: 'Erro ao fazer login.' });
     }
@@ -214,6 +233,6 @@ app.put('/tarefas/:id', auth, async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
+app.listen(3001, () => {
+  console.log('Servidor rodando na porta 3001');
 });

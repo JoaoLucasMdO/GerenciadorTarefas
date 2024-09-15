@@ -34,6 +34,6 @@ model usuario {
   foto    Bytes?
   nome    String    @db.VarChar(35)
   email   String    @unique(map: "email") @db.VarChar(35)
-  senha   String    @db.VarChar(20)
+  senha   String    @db.VarChar(70)
   tarefas tarefas[]
 }

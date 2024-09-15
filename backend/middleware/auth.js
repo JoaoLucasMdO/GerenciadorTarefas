@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header('access-token')?.replace('Bearer ', '');
 
   if (!token) {
     return res.status(401).json({ mensagem: 'Acesso negado. Token não fornecido.' });
