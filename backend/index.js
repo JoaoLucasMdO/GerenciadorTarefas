@@ -141,6 +141,21 @@ app.get('/tarefas', async (req, res) => {
     }
 });
 
+app.get('/tarefas/project/:id', async (req, res) => {
+    try{
+        const tarefas = await prisma.tarefas.findMany({
+             where: {projetoPertencente: req.params.id}
+        });
+        if(tarefas){
+            res.status(200).json(tarefas);
+        }else{
+            res.status(404).json({ mensagem: "Tarefa(s) não encontrada(s)!"});
+        }
+    } catch(error){
+        res.status(500).json({mensagem: "Falha ao buscar a Tarefa!"});
+    }
+});
+
 app.get('/tarefas/:id', async (req, res) => {
     try {
         const tarefa = await prisma.tarefas.findFirst({
@@ -184,18 +199,18 @@ app.delete('/tarefas/:id', async (req, res) => {
     }
 });
 
-app.put('/projetos/:id', async (req, res) => {
+app.put('/tarefas/:id', async (req, res) => {
     try {
-        const projeto = await prisma.projeto.update({
+        const tarefa = await prisma.tarefas.update({
             where: { id: parseInt(req.params.id) },
             data: req.body
         });
         res.status(200).json({
-            mensagem: "Projeto atualizado com sucesso!",
+            mensagem: "Tarefa atualizada com sucesso!",
             projeto: projeto
         });
     } catch (error) {
-        res.status(500).json({ mensagem: "Falha ao atualizar o Projeto." });
+        res.status(500).json({ mensagem: "Falha ao atualizar a Tarefa." });
     }
 });
 
