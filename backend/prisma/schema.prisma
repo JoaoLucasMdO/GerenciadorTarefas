@@ -19,8 +19,8 @@ model tarefas {
   nome               String   @db.VarChar(30)
   descricao          String   @db.VarChar(250)
   responsavel        Int?
-  status             Boolean
-  dataEntrega        DateTime @db.Date
+  status             String   @db.VarChar(15)
+  dataEntrega        String   @db.VarChar(15)
   projetoPertencente Int?
   usuario            usuario? @relation(fields: [responsavel], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tarefas_ibfk_1")
   projeto            projeto? @relation(fields: [projetoPertencente], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tarefas_ibfk_2")

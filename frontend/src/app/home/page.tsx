@@ -1,4 +1,5 @@
 'use client';
+import './home.css'
 import React, { useState, useEffect } from 'react';
 import Header from './components/header';
 import AddProjectCard from './components/addProjectCard';
@@ -15,7 +16,6 @@ const Home: React.FC = () => {
     const fetchProjects = async () => {
       try {
         const response = await api.get('http://localhost:3001/projetos', {}); 
-        console.log(response.data)
         setProjects(response.data);
       } catch (error) {
         console.error('Erro ao buscar projetos:', error);
@@ -31,7 +31,7 @@ const Home: React.FC = () => {
       <main style={{ padding: '2rem' }}>
         <button onClick={() => setShowAddProjectCard(true)}>Adicionar Projetos</button>
         {showAddProjectCard && <AddProjectCard onClose={() => setShowAddProjectCard(false)} />}
-        <div>
+        <div id='projetos'>
           {projects.map((project) => (
             <ProjectCard key={project.id}  project={project} />
           ))}

@@ -24,7 +24,6 @@ const Login = () => {
       localStorage.setItem('id', response.data.id); 
         window.alert(response.data.mensagem);
         window.location.href = '/home';
-
     } catch (error) {
       window.alert(error);
     }
@@ -75,7 +74,7 @@ const Login = () => {
           >
             Entrar
           </Button>
-          <Link href="/cadastrar" variant="body2">
+          <Link href="/register" variant="body2">
             {"Não tem uma conta? Cadastre-se"}
           </Link>
         </Box>

@@ -18,7 +18,7 @@ const AddProjectCard: React.FC<AddProjectCardProps> = ({ onClose }) => {
           'access-token': token
         },
       });
-      window.alert(response.data.mensagem)
+      window.alert(response.data.mensagem);
       onClose();
       window.location.reload();
     } catch (error) {

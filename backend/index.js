@@ -30,9 +30,11 @@ app.get('/usuarios', auth, async (req, res) => {
 });
 
 app.get('/usuarios/:id', async (req, res) => {
+    console.log(req.params.id)
+    paramId = Number(req.params.id)
     try {
         const usuario = await prisma.usuario.findFirst({
-            where: { id: req.query.id }
+            where: { id: paramId }
         });
         if (usuario) {
             res.status(200).json(usuario);
@@ -160,12 +162,14 @@ app.get('/tarefas', async (req, res) => {
     }
 });
 
-app.get('/tarefas/project/:id', async (req, res) => {
+app.get('/tarefas/projeto/:id', async (req, res) => {
     try{
+        id = Number(req.params.id)
         const tarefas = await prisma.tarefas.findMany({
-             where: {projetoPertencente: req.params.id}
+             where: {projetoPertencente: id}
         });
-        if(tarefas){
+        
+        if(tarefas.length > 0){
             res.status(200).json(tarefas);
         }else{
             res.status(404).json({ mensagem: "Tarefa(s) não encontrada(s)!"});
@@ -192,7 +196,9 @@ app.get('/tarefas/:id', async (req, res) => {
 
 app.post('/tarefas', auth, async (req, res) => {
     try {
-        const { nome, descricao, responsavel, status, dataEntrega, projetoPertencente } = req.body;
+        const { nome, descricao, status, dataEntrega } = req.body.newTask;
+       responsavel = Number(req.body.newTask.responsavel)
+       projetoPertencente = Number(req.body.newTask.projetoPertencente)
         await prisma.tarefas.create({
             data: { nome, descricao, responsavel, status, dataEntrega, projetoPertencente },
         });
@@ -200,7 +206,9 @@ app.post('/tarefas', auth, async (req, res) => {
             mensagem: "Tarefa cadastrada com sucesso!",
         });
     } catch (error) {
-        res.status(500).json({ mensagem: "Falha ao cadastrar a Tarefa!" });
+        res.status(500).json({ mensagem: "Falha ao cadastrar a Tarefa!",
+                                error: error.message
+         });
     }
 });
 

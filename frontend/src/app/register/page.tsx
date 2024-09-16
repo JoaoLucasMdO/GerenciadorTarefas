@@ -35,6 +35,7 @@ const Register = () => {
         },
       });
       window.alert(response.data.mensagem);
+      window.location.href = '/'
     } catch (error) {
       window.alert(error);
     }

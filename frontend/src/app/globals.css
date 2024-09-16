@@ -1,1 +1,24 @@
-
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 16px;
+    max-width: 300px;
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-title {
+    font-size: 1.5em;
+    margin-bottom: 8px;
+  }
+  
+  .card-content {
+    font-size: 1em;
+    color: #333;
+  }
